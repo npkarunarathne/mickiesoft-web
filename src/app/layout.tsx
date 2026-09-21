@@ -259,6 +259,7 @@ export default function RootLayout({
             gtag('config', 'G-7GP5GV6ECQ');
           `}
         </Script>
+        <script src="https://analytics.ahrefs.com/analytics.js" data-key="jv/ilUy2ro14EQxGUhREFA" async></script>
 
         {/* Microsoft Clarity */}
         <MicrosoftClarity />
