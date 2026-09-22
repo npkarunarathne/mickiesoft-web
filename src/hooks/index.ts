@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { useAppStore } from "@/store"
 
-const SECTIONS = ["hero", "clients", "about", "stats", "services", "technologies", "contact"]
+const SECTIONS = ["hero", "clients", "about", "stats", "services", "solutions", "technologies", "contact"]
 
 export function useScrollSpy() {
   const setActiveSection = useAppStore((s) => s.setActiveSection)

@@ -88,6 +88,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = [
     buildEntry("/", undefined, "yearly", 1.0),
     buildEntry("/blog", undefined, "weekly", 0.9),
+    buildEntry("/solutions/healthcare-app-development", undefined, "monthly", 0.9),
+    buildEntry("/solutions/hotel-website-design", undefined, "monthly", 0.9),
   ]
 
   // ------------------------------------------------------------------

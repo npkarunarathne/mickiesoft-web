@@ -44,6 +44,8 @@ export async function Footer() {
               {[
                 { id: "about", href: "/#about", label: tNav("about") },
                 { id: "services", href: "/#services", label: tNav("services") },
+                { id: "solutions", href: "/solutions/healthcare-app-development", label: tNav("healthcareAppDevelopment") },
+                { id: "hotelSolutions", href: "/solutions/hotel-website-design", label: tNav("hotelWebsiteDesign") },
                 { id: "technologies", href: "/#technologies", label: tNav("technologies") },
                 { id: "blog", href: "/blog", label: tNav("blog") },
                 { id: "contact", href: "/#contact", label: tNav("contact") }

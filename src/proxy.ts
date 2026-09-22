@@ -23,6 +23,13 @@ export function proxy(request: NextRequest) {
     )
   }
 
+  if (pathname === "/solutions" || pathname === "/solutions/healthcare") {
+    return NextResponse.redirect(
+      new URL("/solutions/healthcare-app-development", request.url),
+      308
+    )
+  }
+
   // Protect CMS routes — redirect to /cms/login if no auth cookie
   const isCMSRoute = pathname.includes("/cms")
   const isLoginPage = pathname.includes("/cms/login")
