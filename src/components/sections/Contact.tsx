@@ -30,6 +30,7 @@ export function Contact() {
   const t = useTranslations("contact")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const recaptchaRef = useRef<ReCAPTCHA>(null)
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY
 
   const {
     register,
@@ -43,18 +44,24 @@ export function Contact() {
   async function onSubmit(data: ContactFormValues) {
     setIsSubmitting(true)
     try {
-      const recaptchaToken = recaptchaRef.current?.getValue()
-      
-      if (!recaptchaToken) {
-        toast.error("Please verify you are not a robot")
-        setIsSubmitting(false)
-        return
+      let recaptchaToken: string = "dev-token"
+
+      if (recaptchaSiteKey) {
+        const token = recaptchaRef.current?.getValue()
+        if (!token) {
+          toast.error("Please verify you are not a robot")
+          setIsSubmitting(false)
+          return
+        }
+        recaptchaToken = token
       }
 
       await contactService.submit({ ...data, recaptchaToken })
       toast.success(t("successMessage"))
       reset()
-      recaptchaRef.current?.reset()
+      if (recaptchaSiteKey) {
+        recaptchaRef.current?.reset()
+      }
     } catch {
       toast.error(t("errorMessage"))
     } finally {
@@ -135,7 +142,12 @@ export function Contact() {
           <AnimatedSection delay={0.2} className="lg:col-span-2">
             <Card className="shadow-lg">
               <CardContent className="p-8">
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <form 
+                  onSubmit={(e) => {
+                    handleSubmit(onSubmit)(e)
+                  }} 
+                  className="space-y-6"
+                >
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="contact-name">{t("namePlaceholder")}</Label>
@@ -198,11 +210,13 @@ export function Contact() {
                       </Typography>
                     )}
                   </div>
-                  <ReCAPTCHA
-                    ref={recaptchaRef}
-                    size="normal"
-                    sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
-                  />
+                  {recaptchaSiteKey ? (
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      size="normal"
+                      sitekey={recaptchaSiteKey}
+                    />
+                  ) : null}
 
                   <ExtendedButton
                     type="submit"

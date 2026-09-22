@@ -7,13 +7,19 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { name, email, subject, message, recaptchaToken } = body;
 
-    if (!name || !email || !subject || !message || !recaptchaToken) {
+    if (!name || !email || !subject || !message) {
       return NextResponse.json({ message: "Missing required fields" }, { status: 400 });
     }
 
-    // Verify ReCaptcha
+    // Verify ReCaptcha if secret key is configured
     const recaptchaSecretKey = process.env.RECAPTCHA_SECRET_KEY;
     if (recaptchaSecretKey) {
+      if (!recaptchaToken || recaptchaToken === "dev-token") {
+        return NextResponse.json(
+          { message: "Please complete reCAPTCHA verification" },
+          { status: 400 }
+        );
+      }
       const recaptchaRes = await fetch(
         `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecretKey}&response=${recaptchaToken}`,
         {
