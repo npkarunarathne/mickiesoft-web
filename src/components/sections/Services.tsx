@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server"
+import { Link } from "@/i18n/navigation"
 import { Typography } from "@/components/typography/Typography"
 import { Card, CardContent } from "@/components/ui/card"
 import { AnimatedSection, StaggerContainer, StaggerItem } from "@/components/shared/PageTransition"
@@ -47,6 +48,7 @@ const FEATURE_ROWS = [
     key: "hireTeam",
     icon: UsersRound,
     reversed: false,
+    href: "/services/hire-developers-sri-lanka",
     visualBg: "bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-950/50 dark:to-violet-900/30",
     ringBorder: "border-violet-300 dark:border-violet-700",
     ringBorderOuter: "border-violet-200 dark:border-violet-800",
@@ -147,39 +149,52 @@ export async function Services() {
         <div className="flex flex-col gap-4">
           {FEATURE_ROWS.map((feat, i) => {
             const Icon = feat.icon
+            const href = "href" in feat ? feat.href : undefined
+            const inner = (
+              <div className={`group border rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg ${href ? "cursor-pointer hover:border-violet-400 dark:hover:border-violet-600 border-slate-200 dark:border-slate-800" : "border-slate-200 dark:border-slate-800 hover:shadow-slate-200/80 dark:hover:shadow-slate-900/60"}`}>
+                <div className={`flex flex-col ${feat.reversed ? "md:flex-row-reverse" : "md:flex-row"} items-stretch`}>
+
+                  {/* Visual side */}
+                  <div className={`relative md:w-72 shrink-0 flex items-center justify-center p-10 ${feat.visualBg}`}>
+                    <div className="relative w-24 h-24 flex items-center justify-center">
+                      {/* spinning dashed rings */}
+                      <div className={`absolute inset-[-10px] rounded-full border-2 border-dashed ${feat.ringBorder} opacity-30 animate-[spin_12s_linear_infinite]`} />
+                      <div className={`absolute inset-[-22px] rounded-full border border-dashed ${feat.ringBorderOuter} opacity-15 animate-[spin_20s_linear_infinite_reverse]`} />
+                      <div className={`w-[76px] h-[76px] rounded-full ${feat.iconBg} flex items-center justify-center shadow-md`}>
+                        <Icon className="w-9 h-9 text-white" strokeWidth={1.7} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Content side */}
+                  <div className="flex-1 p-8 md:p-10 bg-white dark:bg-slate-950 flex flex-col justify-center">
+                    <div className={`inline-flex w-fit text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full ${feat.tagBg} ${feat.tagText} mb-4`}>
+                      {t(`${feat.key}Title` as any)}
+                    </div>
+
+                    <Typography variant="h4" className="mb-3 text-slate-900 dark:text-white leading-tight">
+                      {t(`${feat.key}Title` as any)}
+                    </Typography>
+                    <Typography variant="p" className="text-slate-500 dark:text-slate-400 leading-relaxed max-w-lg">
+                      {t(`${feat.key}Desc` as any)}
+                    </Typography>
+
+                    {href && (
+                      <div className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-violet-600 dark:text-violet-400 group-hover:gap-2.5 transition-all duration-200">
+                        <span>Learn more</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                      </div>
+                    )}
+                  </div>
+
+                </div>
+              </div>
+            )
             return (
               <AnimatedSection key={feat.key} delay={i * 0.08}>
-                <div className="group border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-slate-200/80 dark:hover:shadow-slate-900/60">
-                  <div className={`flex flex-col ${feat.reversed ? "md:flex-row-reverse" : "md:flex-row"} items-stretch`}>
-
-                    {/* Visual side */}
-                    <div className={`relative md:w-72 shrink-0 flex items-center justify-center p-10 ${feat.visualBg}`}>
-                      <div className="relative w-24 h-24 flex items-center justify-center">
-                        {/* spinning dashed rings */}
-                        <div className={`absolute inset-[-10px] rounded-full border-2 border-dashed ${feat.ringBorder} opacity-30 animate-[spin_12s_linear_infinite]`} />
-                        <div className={`absolute inset-[-22px] rounded-full border border-dashed ${feat.ringBorderOuter} opacity-15 animate-[spin_20s_linear_infinite_reverse]`} />
-                        <div className={`w-[76px] h-[76px] rounded-full ${feat.iconBg} flex items-center justify-center shadow-md`}>
-                          <Icon className="w-9 h-9 text-white" strokeWidth={1.7} />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Content side */}
-                    <div className="flex-1 p-8 md:p-10 bg-white dark:bg-slate-950 flex flex-col justify-center">
-                      <div className={`inline-flex w-fit text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full ${feat.tagBg} ${feat.tagText} mb-4`}>
-                        {t(`${feat.key}Title`)}
-                      </div>
-
-                      <Typography variant="h4" className="mb-3 text-slate-900 dark:text-white leading-tight">
-                        {t(`${feat.key}Title`)}
-                      </Typography>
-                      <Typography variant="p" className="text-slate-500 dark:text-slate-400 leading-relaxed max-w-lg">
-                        {t(`${feat.key}Desc`)}
-                      </Typography>
-                    </div>
-
-                  </div>
-                </div>
+                {href ? (
+                  <Link href={href as any}>{inner}</Link>
+                ) : inner}
               </AnimatedSection>
             )
           })}
